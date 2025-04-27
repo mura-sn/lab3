@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableReserve Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #5649d6;
+            --success: #00b894;
+            --danger: #ff7675;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --text: #e2e2e2;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .card {
+            background: var(--darker);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #4a4a68;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #4a4a68;
+            background: #1a1a2e;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+        }
+        
+        button {
+            background: var(--primary);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            background: var(--secondary);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #e84393;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: rgba(0, 184, 148, 0.2);
+            border-left: 4px solid var(--success);
+        }
+        
+        .error {
+            background: rgba(255, 118, 117, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-utensils"></i> TableReserve Pro</h1>
+            <p>Manage your restaurant reservations with ease</p>
+        </header>
+        
+        <div class="dashboard">
+            <div class="card">
+                <h2><i class="fas fa-table"></i> Available Tables</h2>
+                <div id="tables-list">
+                    Loading tables...
+                </div>
+                
+                <h2 style="margin-top: 30px;"><i class="fas fa-calendar-plus"></i> Reservation</h2>
+                <form id="reservation-form">
+                    <input type="hidden" id="reservation-id">
+                    
+                    <div class="form-group">
+                        <label for="table-number">Table Number</label>
+                        <select id="table-number" required>
+                            <option value="">Select a table</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customer-name">Customer Name</label>
+                        <input type="text" id="customer-name" placeholder="Enter customer name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reservation-time">Reservation Time</label>
+                        <input type="datetime-local" id="reservation-time" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="guest-count">Number of Guests</label>
+                        <select id="guest-count" required>
+                            <option value="">Select number of guests</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" id="submit-btn">
+                        <i class="fas fa-bookmark"></i> Save Reservation
+                    </button>
+                    <button type="button" id="cancel-edit" style="display: none; background: var(--danger);">
+                        <i class="fas fa-times"></i> Cancel Edit
+                    </button>
+                </form>
+                <div id="reservation-message"></div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-list"></i> Current Reservations</h2>
+                <div id="reservations-list">
+                    Loading reservations...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
